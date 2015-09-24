@@ -1,0 +1,72 @@
+import numpy as np
+from pylab import*
+import math
+global ax
+global bx
+
+
+
+
+a=np.loadtxt('sun_AM0.dat')
+print type (a)
+x=range(len(a))
+y=range(len(a))
+for i in range(len(a)):
+    x[i]=a[i][0]*0.001   #guardando longitudes de onda en unidades de micrometro
+    y[i]=a[i][1]*10**(6)       #guardando espectro de un cuerpo negro
+
+
+plot(x,y)
+xscale('log')
+#yscale('log')
+xlabel('$longitud \.de \.onda [um]$') #micrometro um
+ylabel('$Flujo \. [ergs\cdot s^{-1}\cdot cm^{-2}cdot \cdot um]$')
+title('$Flujo de un cuerpo negro$')
+grid(True)
+savefig("Flujo vs longitud de onda.png")
+show()
+
+#parte 2
+
+
+
+ax=x[0] #valor min de las longitudes de onda
+bx=x[len(x)-1] #valor max de las longitudes de onda
+#delta=(bx-ax)/(len(a)-1)
+#inte=delta/2.0*(bx+ax+2*)
+
+def integral(y,x,n):
+    delt= (bx-ax)/(n)
+    integr=  y[0]
+    i=0
+    while i<(bx):
+        integr += y[i]
+        i += int(delt)
+        sol=(integr+ y[0] + y[len(x)-1])*(delt/2.0)
+    return sol
+
+caquita=integral (y,x,1600)
+print caquita
+
+def pk(x):#x es la longitud de onda
+    return x**(3)/(math.exp(x)-1)
+
+h=6.62606896*(10**(-27))
+c=299792458
+k=1.3806504*(10**(-16))
+t=5778 #kelvin
+p1= (2.0*pi*h/c**(2))*(k*t/h)**(4)
+
+
+
+def inteplank(pk,n):
+    delta=(bx-ax)/(n)
+    inte=pk[0]
+    i=0
+    if i <=(bx):
+        inte+=pk[i]
+        i+=int(delta)
+        solu=(pk[0]+pk[len(a)-1]+inte)*(delta/2.0)
+    return solu
+
+final=(inteplank(pk,160)*p1)
